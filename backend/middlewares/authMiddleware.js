@@ -2,29 +2,32 @@ const jwt = require('jsonwebtoken');
 const asyncHandler = require('express-async-handler');
 const {
     JWT_ACCESS_SECRET,
-    JWT_REFRESH_SECRET,
-    JWT_ACCESS_EXPIRES_IN,
-    JWT_REFRESH_EXPIRES_IN
 } = require('../config/config');
+const { verifyToken } = require('../utils/token');
 
-const verifyAccessToken = asyncHandler((req, res, next) => {
-    let accessToken;
+const protect = asyncHandler(async (req, res, next) => {
+    let token;
+
+    // Check if token exists and is valid
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-        accessToken = req.headers.authorization.split(' ')[1];
+        try {
+            token = req.headers.authorization.split(' ')[1];
+            // Verify token
+            const { decoded, statusCode } = verifyToken(token, JWT_ACCESS_SECRET);
+            if (!decoded) {
+                res.status(statusCode);
+                throw new Error(statusCode === 401 ? 'Invalid token' : 'Token expired');
+            }
+            req.user = decoded;
+            next();
+        } catch (error) {
+            res.status(401);
+            throw new Error('Not authorized, token failed');
+        }
     } else {
-        return res.status(401).json({message: 'You are not authorized'});
-    }
-
-    if (!accessToken) {
-        return res.status(401).json({message: 'You are not authorized'});
-    }
-
-    const decoded = jwt.verify(accessToken, JWT_ACCESS_SECRET);
-    if (!decoded) {
-        return res.status(401).json({message: 'You are not authorized'});
-    } else {
-        req.user = decoded;
-        next();
+        res.status(401);
+        throw new Error('Not authorized, no token');
     }
 });
 
+module.exports = { protect };

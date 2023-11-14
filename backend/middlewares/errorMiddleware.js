@@ -15,7 +15,7 @@ const errorHandler = (err, req, res, next) => {
     console.log(`${req.method} ${req.protocol}://${req.get('host')}${req.originalUrl} ${new Date().toString()} ${req.ip} ${res.statusCode}`);
 
     res.status(statusCode).json({
-        message: message,
+        message: statusCode === 500 ? 'Something went wrong' : message,
         stack: NODE_ENV === 'production' ? null : err.stack
     });
 }
