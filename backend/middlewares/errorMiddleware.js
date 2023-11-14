@@ -1,9 +1,9 @@
 const { NODE_ENV } = require('../config/config');
 
-const errorHandler = (err, req, res, next) => {
+const errorHandler = (err, req, res) => {
     const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
 
-    let message = err.message;
+    let message;
     if (err.message === 'CastError') {
         message = 'Invalid ID';
     } else if (err.message === 'ValidationError') {

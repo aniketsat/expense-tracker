@@ -1,4 +1,3 @@
-const jwt = require('jsonwebtoken');
 const asyncHandler = require('express-async-handler');
 const {
     JWT_ACCESS_SECRET,
