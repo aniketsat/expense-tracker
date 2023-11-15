@@ -1,6 +1,6 @@
 const { NODE_ENV } = require('../config/config');
 
-const errorHandler = (err, req, res) => {
+const errorHandler = (err, req, res, next) => {
     const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
 
     let message;
@@ -12,7 +12,11 @@ const errorHandler = (err, req, res) => {
         message = err.message;
     }
 
-    console.log(`${req.method} ${req.protocol}://${req.get('host')}${req.originalUrl} ${new Date().toString()} ${req.ip} ${res.statusCode}`);
+    if(!err.message) {
+        message = 'Something went wrong';
+    }
+
+    // console.log(`${req.method} ${req.protocol}://${req.get('host')}${req.originalUrl} ${new Date().toString()} ${req.ip} ${res.statusCode}`);
 
     res.status(statusCode).json({
         message: statusCode === 500 ? 'Something went wrong' : message,
@@ -21,7 +25,7 @@ const errorHandler = (err, req, res) => {
 }
 
 const notFound = (req, res, next) => {
-    const error = new Error(`Not found - ${req.originalUrl}`);
+    const error = new Error(`Not found - ${req.method} ${req.originalUrl}`);
     res.status(404);
     next(error);
 }

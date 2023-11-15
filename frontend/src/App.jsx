@@ -17,11 +17,11 @@ function App() {
     <>
         <MainLayout darkMode={darkMode} toggleDarkMode={toggleDarkMode}>
             <Routes>
-                <Route path='/' element={<PublicRoute />}>
+                <Route element={<PublicRoute />}>
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/register" element={<RegisterPage />} />
                 </Route>
-                <Route path='/' element={<PrivateRoute />}>
+                <Route element={<PrivateRoute />}>
                     <Route path="/" element={<h1>Home</h1>} />
                     <Route path="/transactions" element={<h1>Transactions</h1>} />
                     <Route path="/accounts" element={<h1>Accounts</h1>} />

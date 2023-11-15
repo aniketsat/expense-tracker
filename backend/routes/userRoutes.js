@@ -7,7 +7,9 @@ const {
     register,
     logout,
     refreshToken,
-    getUserProfile
+    getUserProfile,
+    sendOTP,
+    verifyOTP,
 } = require('../controllers/userControllers');
 const { protect } = require('../middlewares/authMiddleware');
 
@@ -31,9 +33,21 @@ router.post('/logout', protect, logout);
 // @access  Public
 router.post('/refresh-token', refreshToken);
 
+// @desc    Send OTP
+// @route   POST /api/users/send-otp
+// @access  Public
+router.post('/send-otp', sendOTP);
+
+// @desc    Verify OTP
+// @route   POST /api/users/verify-otp
+// @access  Public
+router.post('/verify-otp', verifyOTP);
+
 // @desc    Get user profile
 // @route   GET /api/users/profile
 // @access  Private
 router.get('/profile', protect, getUserProfile);
+
+// @desc    Update user profile
 
 module.exports = router;

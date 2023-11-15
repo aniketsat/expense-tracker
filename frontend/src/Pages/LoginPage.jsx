@@ -10,14 +10,44 @@ import {
 } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { Link as RouterLink } from 'react-router-dom';
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
+import { useLoginMutation } from "../store/services/authApi.js";
+import { setAccessToken, setRefreshToken } from "../store/features/userSlice.js";
+import Loader from "../Components/Loader.jsx";
 
 
 export default function LoginPage() {
-    const handleSubmit = (event) => {
+    const dispatch = useDispatch();
+
+    const [login, { isLoading }] = useLoginMutation();
+
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    const handleSubmit = async (event) => {
         event.preventDefault();
+
+        if (email === '' || password === '') {
+            toast.error('Please enter email and password');
+            return;
+        }
+
+        try {
+            const res = await login({email, password}).unwrap();
+            toast.success(res?.message || 'Login successful');
+            dispatch(setAccessToken(res?.data?.accessToken));
+            dispatch(setRefreshToken(res?.data?.refreshToken));
+        } catch (err) {
+            console.log(err);
+            toast.error(err?.data?.message || 'Something went wrong');
+        }
     };
 
     return (
+        <>
+            {isLoading ? <Loader /> : null}
             <Container component="main" maxWidth="xs">
                 <Box
                     sx={{
@@ -43,6 +73,8 @@ export default function LoginPage() {
                             name="email"
                             autoComplete="email"
                             autoFocus
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                         />
                         <TextField
                             margin="normal"
@@ -53,6 +85,8 @@ export default function LoginPage() {
                             type="password"
                             id="password"
                             autoComplete="current-password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
                         />
                         <Button
                             type="submit"
@@ -63,11 +97,11 @@ export default function LoginPage() {
                             Sign In
                         </Button>
                         <Grid container>
-                            <Grid item xs>
-                                <Link href="#" variant="body2">
-                                    Forgot password?
-                                </Link>
-                            </Grid>
+                            {/*<Grid item xs>*/}
+                            {/*    <Link href="#" variant="body2">*/}
+                            {/*        Forgot password?*/}
+                            {/*    </Link>*/}
+                            {/*</Grid>*/}
                             <Grid item>
                                 <Link
                                     component={RouterLink}
@@ -80,5 +114,6 @@ export default function LoginPage() {
                     </Box>
                 </Box>
             </Container>
+        </>
     );
 }
