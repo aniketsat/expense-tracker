@@ -5,6 +5,7 @@ import LoginPage from "./Pages/LoginPage.jsx";
 import RegisterPage from "./Pages/RegisterPage.jsx";
 import PublicRoute from "./Routes/PublicRoute.jsx";
 import PrivateRoute from "./Routes/PrivateRoute.jsx";
+import HomePage from "./Pages/HomePage.jsx";
 
 function App() {
     const [darkMode, setDarkMode] = useState(false);
@@ -22,7 +23,7 @@ function App() {
                     <Route path="/register" element={<RegisterPage />} />
                 </Route>
                 <Route element={<PrivateRoute />}>
-                    <Route path="/" element={<h1>Home</h1>} />
+                    <Route path="/" element={<HomePage />} />
                     <Route path="/transactions" element={<h1>Transactions</h1>} />
                     <Route path="/accounts" element={<h1>Accounts</h1>} />
                     <Route path="/reports" element={<h1>Reports</h1>} />

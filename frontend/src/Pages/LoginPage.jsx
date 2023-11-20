@@ -9,17 +9,18 @@ import {
     Container
 } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { useLoginMutation } from "../store/services/authApi.js";
-import { setAccessToken, setRefreshToken } from "../store/features/userSlice.js";
+import { setUser, setAccessToken, setRefreshToken } from "../store/features/userSlice.js";
 import Loader from "../Components/Loader.jsx";
 
 
 export default function LoginPage() {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const [login, { isLoading }] = useLoginMutation();
 
@@ -39,6 +40,8 @@ export default function LoginPage() {
             toast.success(res?.message || 'Login successful');
             dispatch(setAccessToken(res?.data?.accessToken));
             dispatch(setRefreshToken(res?.data?.refreshToken));
+            dispatch(setUser(res?.data?.user));
+            navigate('/');
         } catch (err) {
             console.log(err);
             toast.error(err?.data?.message || 'Something went wrong');

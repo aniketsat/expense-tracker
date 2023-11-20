@@ -38,7 +38,14 @@ const login = asyncHandler(async (req, res) => {
         message: "Login successful",
         data: {
             accessToken,
-            refreshToken
+            refreshToken,
+            user: {
+                _id: userExists._id,
+                firstName: userExists.firstName,
+                lastName: userExists.lastName,
+                email: userExists.email,
+                username: userExists.username,
+            }
         }
     });
 });
@@ -118,7 +125,7 @@ const refreshToken = asyncHandler(async (req, res) => {
     // Verify refresh token
     const { decoded, statusCode } = verifyToken(refreshToken, JWT_REFRESH_SECRET);
     if (!decoded) {
-        res.status(statusCode);
+        res.status(401);
         throw new Error('Invalid refresh token');
     }
 
