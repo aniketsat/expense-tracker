@@ -4,14 +4,14 @@ const otpApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         sendOtp: builder.mutation({
             query: (body) => ({
-                url: '/users/send-otp',
+                url: '/otp/send-otp',
                 method: 'POST',
                 body,
             }),
         }),
         verifyOtp: builder.mutation({
             query: (body) => ({
-                url: '/users/verify-otp',
+                url: '/otp/verify-otp',
                 method: 'POST',
                 body,
             }),

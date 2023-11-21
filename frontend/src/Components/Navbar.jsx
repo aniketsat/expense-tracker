@@ -112,7 +112,13 @@ function Navbar({ darkMode, toggleDarkMode }) {
             navigate('/login');
         } catch (error) {
             console.log(error);
-            toast.error('Logout failed');
+            if (error?.status === 401 || error?.status === 403) {
+                dispatch(logout());
+                toast.success('Logout successful');
+                navigate('/login');
+            } else {
+                toast.error('Logout failed');
+            }
         }
     };
 
@@ -136,7 +142,7 @@ function Navbar({ darkMode, toggleDarkMode }) {
                                 textDecoration: 'none',
                             }}
                         >
-                            LOGO
+                            Expense Tracker
                         </Typography>
 
                         <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -243,7 +249,7 @@ function Navbar({ darkMode, toggleDarkMode }) {
                                 <>
                                     <Tooltip title="Open settings">
                                         <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                                            <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                                            <Avatar alt={user?.firstName} src={user?.profilePicture} />
                                         </IconButton>
                                     </Tooltip>
                                     <Menu
@@ -263,18 +269,16 @@ function Navbar({ darkMode, toggleDarkMode }) {
                                         onClose={handleCloseUserMenu}
                                     >
                                         {settings.map((setting) => (
-                                            <MenuItem key={setting.title} onClick={handleCloseUserMenu}>
-                                                <Typography textAlign="center"
-                                                    onClick={() => {
-                                                        if (setting.title === 'Logout') {
-                                                            handleLogout();
-                                                            handleCloseUserMenu();
-                                                        } else {
-                                                            navigate(setting.href);
-                                                            handleCloseUserMenu();
-                                                        }
-                                                    }}
-                                                >{setting.title}</Typography>
+                                            <MenuItem key={setting.title} onClick={async () => {
+                                                if (setting.title === 'Logout') {
+                                                    await handleLogout();
+                                                    handleCloseUserMenu();
+                                                } else {
+                                                    navigate(setting.href);
+                                                    handleCloseUserMenu();
+                                                }
+                                            }}>
+                                                <Typography textAlign="center" onClick={handleCloseUserMenu}>{setting.title}</Typography>
                                             </MenuItem>
                                         ))}
                                     </Menu>

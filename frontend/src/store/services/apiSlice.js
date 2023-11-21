@@ -19,7 +19,7 @@ const baseQueryWithRefresh = async (args, api, extraOptions) => {
         // send a post request to /users/refresh-token using the refresh token as the body
         const refreshResult = await baseQuery(
             {
-                url: '/users/refresh-token',
+                url: '/auth/refresh-token',
                 method: 'POST',
                 body: {
                     refreshToken: api.getState().user.refreshToken,
