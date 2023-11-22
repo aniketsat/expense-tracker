@@ -44,12 +44,13 @@ const updateUserProfile = asyncHandler(async (req, res) => {
 
     // Send the updated user object as response
     res.status(200).json({
-        message: 'User updated',
+        message: 'Profile updated successfully',
         user: {
             _id: updatedUser._id,
             firstName: updatedUser.firstName,
             lastName: updatedUser.lastName,
             email: updatedUser.email,
+            username: updatedUser.username,
         }
     });
 });
@@ -68,7 +69,7 @@ const updatePassword = asyncHandler(async (req, res) => {
 
     // If password does not match, throw an error
     if (!isMatch) {
-        res.status(401);
+        res.status(405);
         throw new Error('Invalid password');
     }
 
@@ -83,13 +84,7 @@ const updatePassword = asyncHandler(async (req, res) => {
 
     // Send the updated user object as response
     res.status(200).json({
-        message: 'Password updated',
-        user: {
-            _id: updatedUser._id,
-            firstName: updatedUser.firstName,
-            lastName: updatedUser.lastName,
-            email: updatedUser.email,
-        }
+        message: 'Password updated successfully',
     });
 });
 
