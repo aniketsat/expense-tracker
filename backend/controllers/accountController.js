@@ -121,7 +121,7 @@ const deleteAccount = asyncHandler(async (req, res) => {
     }
 
     // Delete account
-    await account.remove();
+    await Account.findByIdAndDelete(accountId);
 
     // Return success message
     res.status(200).json({
