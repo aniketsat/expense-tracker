@@ -1,8 +1,9 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import {  setAccessToken, setRefreshToken, logout } from "../features/userSlice.js";
+import {toast} from "react-toastify";
 
 const baseQuery = fetchBaseQuery({
-    baseUrl: 'http://localhost:8000/api',
+    baseUrl: 'https://expense-tracker-5v16.onrender.com/api',
     prepareHeaders: (headers, { getState }) => {
         const token = getState().user.accessToken;
         if (token) {
@@ -14,6 +15,11 @@ const baseQuery = fetchBaseQuery({
 
 const baseQueryWithRefresh = async (args, api, extraOptions) => {
     let result = await baseQuery(args, api, extraOptions);
+    console.log(result)
+    if(result?.error?.status === "FETCH_ERROR") {
+        toast.error("Network Error");
+        return result;
+    }
 
     if (result?.error?.status === 403) {
         // send a post request to /users/refresh-token using the refresh token as the body
