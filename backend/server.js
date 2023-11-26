@@ -16,7 +16,7 @@ const transactionRoutes = require('./routes/transactionRoutes');
 const app = express();
 
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: 'https://expense-tracker-delta-fawn.vercel.app/',
     credentials: true,
     optionsSuccessStatus: 200
 }));
