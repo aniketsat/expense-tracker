@@ -3,7 +3,7 @@ import {  setAccessToken, setRefreshToken, logout } from "../features/userSlice.
 import {toast} from "react-toastify";
 
 const baseQuery = fetchBaseQuery({
-    baseUrl: 'https://expense-tracker-5v16.onrender.com/api',
+    baseUrl: 'http://localhost:8000/api',
     prepareHeaders: (headers, { getState }) => {
         const token = getState().user.accessToken;
         if (token) {

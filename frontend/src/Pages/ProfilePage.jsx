@@ -201,6 +201,7 @@ function ProfilePage() {
                                     id="outlined-basic"
                                     label="Email"
                                     variant="outlined"
+                                    disabled={true}
                                     sx={{ width: "100%", marginTop: "1rem" }}
                                     focused={true}
                                     defaultValue={data?.user?.email}
