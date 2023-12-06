@@ -8,6 +8,7 @@ const router = express.Router();
 // @desc    Get all account types
 // @route   GET /api/accounts/types
 // @access  Private
+router.get('/types', protect, getAccountTypes);
 
 // @desc    Create a new account
 // @route   POST /api/accounts

@@ -6,10 +6,34 @@ const getAccountTypes = asyncHandler(async (req, res) => {
     // Get account types from account model
     const accountTypes = Account.schema.path('type').enumValues;
 
+    // If no account types, return error
+    if (!accountTypes) {
+        res.status(500);
+        throw new Error('Something went wrong');
+    }
+
+    // Fetch balance for each account type
+    const accountTypeBalance = await Account.aggregate([
+        {
+            $group: {
+                _id: '$type',
+                balance: { $sum: '$balance' }
+            }
+        }
+    ]);
+
+    const accountTypeWithBalance = accountTypes.map(type => {
+        const accountType = accountTypeBalance.find(t => t.type === type);
+        return {
+            type,
+            balance: accountType ? accountType.balance : 0
+        }
+    });
+
     // Return account types
     res.status(200).json({
         message: 'Account types fetched successfully',
-        types: accountTypes
+        types: accountTypeWithBalance
     });
 });
 
@@ -43,8 +67,15 @@ const getAccounts = asyncHandler(async (req, res) => {
     // Get user id from req.user._id
     const userId = req.user._id;
 
+    const { type } = req.query;
+
     // Find all accounts with user id
-    const accounts = await Account.find({ user: userId });
+    let accounts;
+    if (type) {
+        accounts = await Account.find({ user: userId, type });
+    } else {
+        accounts = await Account.find({ user: userId });
+    }
 
     // Return accounts
     res.status(200).json({
@@ -125,7 +156,8 @@ const deleteAccount = asyncHandler(async (req, res) => {
 
     // Return success message
     res.status(200).json({
-        message: 'Account deleted successfully'
+        message: 'Account deleted successfully',
+        account
     });
 });
 
