@@ -17,7 +17,6 @@ import {useSelector, useDispatch} from "react-redux";
 import {setAccounts} from "../store/features/accountSlice.js";
 import { useGetAccountTypesQuery, useGetAccountsQuery } from "../store/services/accountApi.js";
 
-
 function AccountsPage() {
     const [accountTypes, setAccountTypes] = useState([]);
 
@@ -96,7 +95,7 @@ function AccountsPage() {
                                         }}
                                     >
                                         {
-                                            accounts?.length === 0 && (
+                                            accounts?.filter((account) => account?.type === type?.type).length === 0 && (
                                                 <Typography variant={"body1"} color={"text.secondary"}>No accounts added yet</Typography>
                                             )
                                         }

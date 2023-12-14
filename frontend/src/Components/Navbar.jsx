@@ -18,7 +18,7 @@ import AdbIcon from '@mui/icons-material/Adb';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../store/features/userSlice.js";
 import { useLogoutMutation } from "../store/services/authApi.js";
@@ -175,10 +175,13 @@ function Navbar({ darkMode, toggleDarkMode }) {
                                 }}
                             >
                                 {pages.map((page) => (
-                                    <MenuItem key={page.title} onClick={handleCloseNavMenu} sx={{
-                                        display: user && !page.auth ? 'none' : 'block',
+                                    <MenuItem key={page.title} onClick={() => {
+                                        handleCloseNavMenu();
+                                        navigate(page.href);
+                                    }} sx={{
+                                        display: user && !page.auth || !user && page.auth ? 'none' : 'block',
                                     }}>
-                                        <Typography textAlign="center" component={RouterLink} to={page.href} sx={{
+                                        <Typography textAlign="center" sx={{
                                             color: 'inherit',
                                             textDecoration: 'none',
                                         }}
@@ -211,7 +214,7 @@ function Navbar({ darkMode, toggleDarkMode }) {
                                     sx={{
                                         my: 2,
                                         color: 'white',
-                                        display: user && !page.auth ? 'none' : 'block',
+                                        display: user && !page.auth || !user && page.auth ? 'none' : 'block',
                                     }}
                                     onClick={() => {
                                         navigate(page.href);
